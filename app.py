@@ -1,8 +1,38 @@
 """A todo app built in flask with a postgresql db"""
 
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+DIALECT = 'postgresql'
+USER = 'dneal'
+PASS = ''
+HOST = 'localhost'
+PORT = 5432
+DATABASE = 'todoapp'
 
 app = Flask(__name__)
+SQLALCHEMY_DATABASE_URI = f'{DIALECT}://{USER}:{PASS}@{HOST}:{PORT}/{DATABASE}'
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+
+db = SQLAlchemy(app)
+
+
+class Todo(db.Model):
+    """A model representing a todo item
+
+    Attributes:
+        id: A unique identifier for a todo object
+        description: A str representing the todo objects' content
+    """
+    __tablename__ = 'todos'
+    id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(), nullable=False)
+
+    def __repr__(self):
+        return f'<Todo {self.id} {self.description}>'
+
+
+db.create_all()
 
 
 @app.route('/')
@@ -12,11 +42,7 @@ def index():
     Returns:
         A template representing the homepage
     """
-    data = [
-        {'description': 'Todo 1'},
-        {'description': 'Todo 2'},
-        {'description': 'Todo 3'},
-    ]
+    data = Todo.query.all()
     return render_template('index.html', data=data)
 
 
