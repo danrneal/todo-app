@@ -1,6 +1,6 @@
 """A todo app built in flask with a postgresql db"""
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 DIALECT = 'postgresql'
@@ -33,6 +33,21 @@ class Todo(db.Model):
 
 
 db.create_all()
+
+
+@app.route('/todos/create', methods=['POST'])
+def create_todo():
+    """The route handler for handling post request from users submitting the
+    form to create a new todo item
+
+    Returns:
+        Redirects to the homepage
+    """
+    description = request.form.get('description', '')
+    todo = Todo(description=description)
+    db.session.add(todo)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 
 @app.route('/')

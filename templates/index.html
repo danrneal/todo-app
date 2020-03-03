@@ -5,11 +5,18 @@
 </head>
 
 <body>
+
+    <form action="/todos/create" method="POST">
+        <input type="text" name="description">
+        <input type="submit" value="Create">
+    </form>
+
     <ul>
         {% for item in data %}
         <li>{{ item.description }}</li>
         {% endfor %}
     </ul>
+
 </body>
 
 </html>
