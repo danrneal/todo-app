@@ -3,6 +3,7 @@
 import sys
 from flask import Flask, render_template, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 DIALECT = 'postgresql'
 USER = 'dneal'
@@ -17,6 +18,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
 
 
 class Todo(db.Model):
