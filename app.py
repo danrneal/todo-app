@@ -1,6 +1,7 @@
 """A todo app built in flask with a postgresql db"""
 
-from flask import Flask, render_template, request, jsonify
+import sys
+from flask import Flask, render_template, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 
 DIALECT = 'postgresql'
@@ -43,11 +44,25 @@ def create_todo():
     Returns:
         Response: A json object with the todo item content
     """
-    description = request.get_json()['description']
-    todo = Todo(description=description)
-    db.session.add(todo)
-    db.session.commit()
-    response = {'description': todo.description}
+
+    error = False
+
+    try:
+        description = request.get_json()['description']
+        todo = Todo(description=description)
+        db.session.add(todo)
+        db.session.commit()
+        response = {'description': todo.description}
+    except Exception:
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+
     return jsonify(response)
 
 
