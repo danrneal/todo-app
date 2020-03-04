@@ -37,9 +37,6 @@ class Todo(db.Model):
         return f'<Todo {self.id} {self.description}>'
 
 
-db.create_all()
-
-
 @app.route('/todos/create', methods=['POST'])
 def create_todo():
     """The route handler for handling post request from users submitting the
