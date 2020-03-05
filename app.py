@@ -88,6 +88,7 @@ def set_completed_todo(todo_id):
         db.session.commit()
     except Exception:  # pylint: disable=broad-except
         error = True
+        db.session.rollback()
         print(sys.exc_info())
     finally:
         db.session.close()
