@@ -140,15 +140,25 @@ def delete_todo(todo_id):
     return jsonify(response)
 
 
+@app.route('/lists/<list_id>')
+def get_list(list_id):
+    """The route handler for a list's page
+
+    Returns:
+        A template representing the page for a given list
+    """
+    data = Todo.query.filter_by(list_id=list_id).order_by('id').all()
+    return render_template('index.html', data=data)
+
+
 @app.route('/')
 def index():
     """The route handler for the homepage
 
     Returns:
-        A template representing the homepage
+        A redirect to the first list
     """
-    data = Todo.query.order_by('id').all()
-    return render_template('index.html', data=data)
+    return redirect(url_for('get_list', list_id=1))
 
 
 if __name__ == '__main__':
