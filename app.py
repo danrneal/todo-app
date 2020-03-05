@@ -1,7 +1,9 @@
 """A todo app built in flask with a postgresql db"""
 
 import sys
-from flask import Flask, render_template, request, jsonify, abort
+from flask import (
+    Flask, render_template, request, jsonify, abort, redirect, url_for
+)
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -66,6 +68,34 @@ def create_todo():
         abort(500)
 
     return jsonify(response)
+
+
+@app.route('/todos/<todo_id>/edit', methods=['POST'])
+def set_completed_todo(todo_id):
+    """The route handler for handling post request from users checking or
+    unchecking a todo item
+
+    Returns:
+        Redirects to home page
+    """
+
+    error = False
+
+    try:
+        completed = request.get_json()['completed']
+        todo = Todo.query.get(todo_id)
+        todo.completed = completed
+        db.session.commit()
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+
+    return redirect(url_for('index'))
 
 
 @app.route('/')
