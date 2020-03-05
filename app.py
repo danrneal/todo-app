@@ -99,6 +99,35 @@ def set_completed_todo(todo_id):
     return redirect(url_for('index'))
 
 
+@app.route('/todos/<todo_id>', methods=['DELETE'])
+def delete_todo(todo_id):
+    """The route handler for handling a delete request from users clicking
+    the x butten next to the todo item
+
+    Returns:
+        Response: A json object signalling the deletion request was successful
+    """
+
+    error = False
+
+    try:
+        todo = Todo.query.get(todo_id)
+        db.session.delete(todo)
+        db.session.commit()
+        response = {'success': True}
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+
+    return jsonify(response)
+
+
 @app.route('/')
 def index():
     """The route handler for the homepage

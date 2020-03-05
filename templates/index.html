@@ -11,6 +11,22 @@
 
         ul {
             list-style: none;
+            padding: 0;
+            width: 200px;
+        }
+
+        li {
+            clear: both;
+        }
+
+        li button {
+            background: none;
+            border: none;
+            outline: none;
+            color: red;
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -26,14 +42,34 @@
 
     <ul id="todos">
         {% for item in data %}
-        <li>
+        <li data-id="{{ item.id }}">
             <input class="completed" data-id="{{ item.id }}" type="checkbox" {% if item.completed %}checked{% endif %}>
             {{ item.description }}
+            <button class="cross" data-id="{{ item.id }}">&Cross;</button>
         </li>
         {% endfor %}
     </ul>
 
     <script>
+
+        const btns = document.querySelectorAll('.cross');
+        for (let i = 0; i < btns.length; i++) {
+            const btn = btns[i];
+            btn.onclick = function (event) {
+                const todoId = event.target.dataset.id;
+                fetch('todos/' + todoId, {
+                    method: 'DELETE'
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (jsonResponse) {
+                    const liItem = document.querySelector('li[data-id="' + todoId + '"]');
+                    liItem.remove();
+                    document.getElementById('error').className = 'hidden';
+                }).catch(function () {
+                    document.getElementById('error').className = '';
+                })
+            }
+        }
 
         const checkboxes = document.querySelectorAll('.completed');
         for (let i = 0; i < checkboxes.length; i++) {
