@@ -105,7 +105,7 @@ def index():
     Returns:
         A template representing the homepage
     """
-    data = Todo.query.all()
+    data = Todo.query.order_by('id').all()
     return render_template('index.html', data=data)
 
 
