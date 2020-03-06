@@ -155,6 +155,35 @@ def delete_todo(todo_id):
     return jsonify(response)
 
 
+@app.route('/lists/create', methods=['POST'])
+def create_list():
+    """The route handler responsible to creating a list
+
+    Returns:
+        A redirect to the newly created list's page
+    """
+
+    error = False
+
+    try:
+        name = request.form.get('name')
+        todo_list = TodoList(name=name)
+        db.session.add(todo_list)
+        db.session.commit()
+        list_id = todo_list.id
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+
+    return redirect(url_for('get_list', list_id=list_id))
+
+
 @app.route('/lists/<list_id>')
 def get_list(list_id):
     """The route handler for a list's page

@@ -44,6 +44,16 @@
 <body>
 
     <div class="lists-wrapper">
+
+        <h4>Todo Lists</h4>
+
+        <form id="form" action="/lists/create" method="POST">
+            <input type="text" id='name' name="name">
+            <input type="submit" value="Create">
+        </form>
+
+        <div id="list-error" class="hidden">Something went wrong!</div>
+
         <ul id="lists">
             {% for list in lists %}
             <li>
@@ -51,6 +61,7 @@
             </li>
             {% endfor %}
         </ul>
+
     </div>
 
     <div class="todos-wrapper">
