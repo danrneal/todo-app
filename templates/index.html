@@ -19,6 +19,10 @@
             clear: both;
         }
 
+        :checked+span {
+            text-decoration: line-through;
+        }
+
         li button {
             background: none;
             border: none;
@@ -66,8 +70,8 @@
             <li data-id="{{ todo.id }}">
                 <input class="completed" data-id="{{ todo.id }}" type="checkbox"
                     {% if todo.completed %}checked{% endif %}>
-                {{ todo.description }}
-                <button class="cross" data-id="{{ todo.id }}">&Cross;</button>
+                <span>{{ todo.description }}</span>
+                <button class="btn" data-id="{{ todo.id }}">&Cross;</button>
             </li>
             {% endfor %}
         </ul>
@@ -76,7 +80,7 @@
 
     <script>
 
-        const btns = document.querySelectorAll('.cross');
+        const btns = document.querySelectorAll('.btn');
         for (let i = 0; i < btns.length; i++) {
             const btn = btns[i];
             btn.onclick = function (event) {
