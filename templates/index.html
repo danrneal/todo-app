@@ -63,7 +63,7 @@
             <input type="submit" value="Create">
         </form>
 
-        <div id="error" class="hidden">Something went wrong!</div>
+        <div id="todo-error" class="hidden">Something went wrong!</div>
 
         <ul id="todos">
             {% for todo in todos %}
@@ -90,9 +90,9 @@
                 }).then(function () {
                     const liItem = document.querySelector('li[data-id="' + todoId + '"]');
                     liItem.remove();
-                    document.getElementById('error').className = 'hidden';
+                    document.getElementById('todo-error').className = 'hidden';
                 }).catch(function () {
-                    document.getElementById('error').className = '';
+                    document.getElementById('todo-error').className = '';
                 })
             }
         }
@@ -112,9 +112,9 @@
                         'Content-type': 'application/json'
                     }
                 }).then(function () {
-                    document.getElementById('error').className = 'hidden';
+                    document.getElementById('todo-error').className = 'hidden';
                 }).catch(function () {
-                    document.getElementById('error').className = '';
+                    document.getElementById('todo-error').className = '';
                 })
             }
         }
