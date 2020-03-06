@@ -66,7 +66,7 @@ def create_todo():
     form to create a new todo item
 
     Returns:
-        Response: A json object with the todo item content
+        Redirect back to the list's page
     """
 
     error = False
@@ -95,8 +95,11 @@ def set_completed_todo(todo_id):
     """The route handler for handling post request from users checking or
     unchecking a todo item
 
+    Args:
+        todo_id: A str representing the id of the todo item that was completed
+
     Returns:
-        Redirects to home page
+        Response: A json object signalling the update request was successful
     """
 
     error = False
@@ -125,6 +128,9 @@ def delete_todo(todo_id):
     """The route handler for handling a delete request from users clicking
     the x butten next to the todo item
 
+    Args:
+        todo_id: A str representing the id of the todo item to be deleted
+
     Returns:
         Response: A json object signalling the deletion request was successful
     """
@@ -152,6 +158,9 @@ def delete_todo(todo_id):
 @app.route('/lists/<list_id>')
 def get_list(list_id):
     """The route handler for a list's page
+
+    Args:
+        list_id: A str representing the id of the list to navigate to
 
     Returns:
         A template representing the page for a given list
