@@ -106,6 +106,7 @@ def set_completed_todo(todo_id):
         todo = Todo.query.get(todo_id)
         todo.completed = completed
         db.session.commit()
+        response = {'success': True}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -116,7 +117,7 @@ def set_completed_todo(todo_id):
     if error:
         abort(500)
 
-    return redirect(url_for('index'))
+    return jsonify(response)
 
 
 @app.route('/todos/<todo_id>', methods=['DELETE'])
