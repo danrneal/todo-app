@@ -76,7 +76,6 @@ def create_todo():
         todo = Todo(description=description)
         db.session.add(todo)
         db.session.commit()
-        response = {'description': todo.description}
     except Exception:  # pylint: disable=broad-except
         error = True
         db.session.rollback()
@@ -87,7 +86,7 @@ def create_todo():
     if error:
         abort(500)
 
-    return jsonify(response)
+    return redirect(url_for('get_list', list_id=list_id))
 
 
 @app.route('/todos/<todo_id>/edit', methods=['POST'])
