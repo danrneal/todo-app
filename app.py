@@ -155,8 +155,15 @@ def get_list(list_id):
     Returns:
         A template representing the page for a given list
     """
-    data = Todo.query.filter_by(list_id=list_id).order_by('id').all()
-    return render_template('index.html', data=data)
+    lists = TodoList.query.all()
+    active_list = TodoList.query.get(list_id)
+    todos = Todo.query.filter_by(list_id=list_id).order_by('id').all()
+    return render_template(
+        'index.html',
+        lists=lists,
+        active_list=active_list,
+        todos=todos
+    )
 
 
 @app.route('/')
