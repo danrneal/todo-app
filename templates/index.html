@@ -80,11 +80,9 @@
             const btn = btns[i];
             btn.onclick = function (event) {
                 const todoId = event.target.dataset.id;
-                fetch('todos/' + todoId, {
+                fetch('/todos/' + todoId, {
                     method: 'DELETE'
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (jsonResponse) {
+                }).then(function () {
                     const liItem = document.querySelector('li[data-id="' + todoId + '"]');
                     liItem.remove();
                     document.getElementById('error').className = 'hidden';
@@ -100,7 +98,7 @@
             checkbox.onchange = function (event) {
                 const completed = event.target.checked;
                 const todoId = event.target.dataset.id;
-                fetch('todos/' + todoId + '/edit', {
+                fetch('/todos/' + todoId + '/edit', {
                     method: 'POST',
                     body: JSON.stringify({
                         'completed': completed
