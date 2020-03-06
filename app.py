@@ -72,8 +72,9 @@ def create_todo():
     error = False
 
     try:
-        description = request.get_json()['description']
-        todo = Todo(description=description)
+        description = request.form.get('description')
+        list_id = request.form.get('list_id')
+        todo = Todo(description=description, list_id=list_id)
         db.session.add(todo)
         db.session.commit()
     except Exception:  # pylint: disable=broad-except
