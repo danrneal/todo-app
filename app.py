@@ -29,7 +29,8 @@ class Todo(db.Model):
 
     Attributes:
         id: A unique identifier for a todo object
-        description: A str representing the todo objects' content
+        description: A str representing the todo object's content
+        list_id: A foreign key linking a todo item to a todo list
     """
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
@@ -46,6 +47,13 @@ class Todo(db.Model):
 
 
 class TodoList(db.Model):
+    """A model representing a todo list
+
+    Attibutes:
+        id: A unique identifier for a todo list object
+        name: A str representing the todo list object's name
+        todos: A relationship for a foreign key on the todo item model
+    """
     __tablename__ = 'todo_lists'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
