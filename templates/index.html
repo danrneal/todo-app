@@ -82,7 +82,7 @@
                 <input class="completed" data-id="{{ todo.id }}" type="checkbox"
                     {% if todo.completed %}checked{% endif %}>
                 <span>{{ todo.description }}</span>
-                <button class="btn" data-id="{{ todo.id }}">&Cross;</button>
+                <button class="todo-del" data-id="{{ todo.id }}">&Cross;</button>
             </li>
             {% endfor %}
         </ul>
@@ -91,10 +91,10 @@
 
     <script>
 
-        const btns = document.querySelectorAll('.btn');
-        for (let i = 0; i < btns.length; i++) {
-            const btn = btns[i];
-            btn.onclick = function (event) {
+        const todoDels = document.querySelectorAll('.todo-del');
+        for (let i = 0; i < todoDels.length; i++) {
+            const todoDel = todoDels[i];
+            todoDel.onclick = function (event) {
                 const todoId = event.target.dataset.id;
                 fetch('/todos/' + todoId, {
                     method: 'DELETE'
