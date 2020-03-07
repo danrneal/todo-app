@@ -56,8 +56,9 @@
 
         <ul id="lists">
             {% for list in lists %}
-            <li>
+            <li data-list-id="{{ list.id }}">
                 <a href="/lists/{{ list.id }}">{{ list.name }}</a>
+                <button class="list-del" data-list-id="{{ list.id }}">&Cross;</button>
             </li>
             {% endfor %}
         </ul>
@@ -126,6 +127,27 @@
                     document.getElementById('todo-error').className = 'hidden';
                 }).catch(function () {
                     document.getElementById('todo-error').className = '';
+                })
+            }
+        }
+
+        const listDels = document.querySelectorAll('.list-del');
+        for (let i = 0; i < listDels.length; i++) {
+            const listDel = listDels[i];
+            listDel.onclick = function (event) {
+                const listId = event.target.dataset.listId;
+                fetch('/lists/' + listId, {
+                    method: 'DELETE'
+                }).then(function () {
+                    if (listId === "{{ active_list.id }}") {
+                        window.location.replace("/");
+                    } else {
+                        const liItem = document.querySelector('li[data-list-id="' + listId + '"]');
+                        liItem.remove();
+                    }
+                    document.getElementById('list-error').className = 'hidden';
+                }).catch(function () {
+                    document.getElementById('list-error').className = '';
                 })
             }
         }

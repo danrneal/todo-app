@@ -57,7 +57,12 @@ class TodoList(db.Model):
     __tablename__ = 'todo_lists'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
-    todos = db.relationship('Todo', backref='list', lazy=True)
+    todos = db.relationship(
+        'Todo',
+        backref='list',
+        cascade="all, delete-orphan",
+        lazy=True
+    )
 
 
 @app.route('/todos/create', methods=['POST'])
@@ -182,6 +187,38 @@ def create_list():
         abort(500)
 
     return redirect(url_for('get_list', list_id=list_id))
+
+
+@app.route('/lists/<list_id>', methods=['DELETE'])
+def delete_list(list_id):
+    """The route handler for handling a delete request from users clicking
+    the x butten next to the todo list
+
+    Args:
+        todo_id: A str representing the id of the todo list to be deleted
+
+    Returns:
+        Response: A json object signalling the deletion request was successful
+    """
+
+    error = False
+
+    try:
+        todo_list = TodoList.query.get(list_id)
+        db.session.delete(todo_list)
+        db.session.commit()
+        response = {'success': True}
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+
+    return jsonify(response)
 
 
 @app.route('/lists/<list_id>')
