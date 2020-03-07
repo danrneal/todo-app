@@ -47,7 +47,7 @@
 
         <h4>Todo Lists</h4>
 
-        <form id="form" action="/lists/create" method="POST">
+        <form id="list-form" action="/lists/create" method="POST">
             <input type="text" id='name' name="name">
             <input type="submit" value="Create">
         </form>
@@ -68,7 +68,7 @@
 
         <h4>{{ active_list.name }}</h4>
 
-        <form id="form" action="/todos/create" method="POST">
+        <form id="todo-form" action="/todos/create" method="POST">
             <input type="text" id='description' name="description">
             <input type="hidden" value="{{ active_list.id }}" name="list_id" />
             <input type="submit" value="Create">
@@ -78,11 +78,11 @@
 
         <ul id="todos">
             {% for todo in todos %}
-            <li data-id="{{ todo.id }}">
-                <input class="completed" data-id="{{ todo.id }}" type="checkbox"
+            <li data-todo-id="{{ todo.id }}">
+                <input class="completed" data-todo-id="{{ todo.id }}" type="checkbox"
                     {% if todo.completed %}checked{% endif %}>
                 <span>{{ todo.description }}</span>
-                <button class="todo-del" data-id="{{ todo.id }}">&Cross;</button>
+                <button class="todo-del" data-todo-id="{{ todo.id }}">&Cross;</button>
             </li>
             {% endfor %}
         </ul>
@@ -95,11 +95,11 @@
         for (let i = 0; i < todoDels.length; i++) {
             const todoDel = todoDels[i];
             todoDel.onclick = function (event) {
-                const todoId = event.target.dataset.id;
+                const todoId = event.target.dataset.todoId;
                 fetch('/todos/' + todoId, {
                     method: 'DELETE'
                 }).then(function () {
-                    const liItem = document.querySelector('li[data-id="' + todoId + '"]');
+                    const liItem = document.querySelector('li[data-todo-id="' + todoId + '"]');
                     liItem.remove();
                     document.getElementById('todo-error').className = 'hidden';
                 }).catch(function () {
@@ -113,7 +113,7 @@
             const checkbox = checkboxes[i];
             checkbox.onchange = function (event) {
                 const completed = event.target.checked;
-                const todoId = event.target.dataset.id;
+                const todoId = event.target.dataset.todoId;
                 fetch('/todos/' + todoId + '/edit', {
                     method: 'POST',
                     body: JSON.stringify({
