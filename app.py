@@ -247,9 +247,10 @@ def index():
     """The route handler for the homepage
 
     Returns:
-        A redirect to the first list
+        A redirect to the first list in the db
     """
-    return redirect(url_for('get_list', list_id=1))
+    first_list = TodoList.query.first()
+    return redirect(url_for('get_list', list_id=first_list.id))
 
 
 if __name__ == '__main__':
