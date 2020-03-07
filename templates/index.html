@@ -88,6 +88,10 @@
             {% endfor %}
         </ul>
 
+        <div>
+            <button id="complete-all" data-list-id="{{ active_list.id }}">Complete All</button>
+        </div>
+
     </div>
 
     <script>
@@ -129,6 +133,23 @@
                     document.getElementById('todo-error').className = '';
                 })
             }
+        }
+
+        const completeAll = document.querySelector('#complete-all');
+        completeAll.onclick = function (event) {
+            const listId = event.target.dataset.listId;
+            fetch('/lists/' + listId + '/edit', {
+                method: 'POST'
+            }).then(function () {
+                const checkboxes = document.querySelectorAll('.completed');
+                for (let i = 0; i < checkboxes.length; i++) {
+                    const checkbox = checkboxes[i];
+                    checkbox.checked = true;
+                }
+                document.getElementById('todo-error').className = 'hidden';
+            }).catch(function () {
+                document.getElementById('todo-error').className = '';
+            })
         }
 
         const listDels = document.querySelectorAll('.list-del');

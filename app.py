@@ -189,6 +189,40 @@ def create_list():
     return redirect(url_for('get_list', list_id=list_id))
 
 
+@app.route('/lists/<list_id>/edit', methods=['POST'])
+def set_completed_list(list_id):
+    """The route handler for handling post request from users clicking complete
+    all todos on a list
+
+    Args:
+        list_id: A str representing the id of the todo list item where all
+            todos are to be marked as complete
+
+    Returns:
+        Response: A json object signalling the update request was successful
+    """
+
+    error = False
+
+    try:
+        todo_list = TodoList.query.get(list_id)
+        for todo in todo_list.todos:
+            todo.completed = True
+        db.session.commit()
+        response = {'success': True}
+    except Exception:  # pylint: disable=broad-except
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+
+    return jsonify(response)
+
+
 @app.route('/lists/<list_id>', methods=['DELETE'])
 def delete_list(list_id):
     """The route handler for handling a delete request from users clicking
