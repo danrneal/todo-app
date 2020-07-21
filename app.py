@@ -64,7 +64,7 @@ class Todo(db.Model):
 class TodoList(db.Model):
     """A model representing a todo list.
 
-    Attibutes:
+    Attributes:
         id: A unique identifier for a todo list object
         name: A str representing the todo list object's name
         todos: A relationship for a foreign key on the todo item model
