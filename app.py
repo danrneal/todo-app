@@ -18,11 +18,18 @@ Classes:
 """
 
 import sys
+
 from flask import (
-    Flask, render_template, request, jsonify, abort, redirect, url_for
+    Flask,
+    abort,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
 )
-from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 DIALECT = "postgresql"
 HOST = "localhost"
