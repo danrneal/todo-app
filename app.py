@@ -40,7 +40,7 @@ migrate = Migrate(app, db)
 
 
 class Todo(db.Model):
-    """A model representing a todo item
+    """A model representing a todo item.
 
     Attributes:
         id: A unique identifier for a todo object
@@ -61,7 +61,7 @@ class Todo(db.Model):
 
 
 class TodoList(db.Model):
-    """A model representing a todo list
+    """A model representing a todo list.
 
     Attibutes:
         id: A unique identifier for a todo list object
@@ -79,13 +79,11 @@ class TodoList(db.Model):
 
 @app.route("/todos/create", methods=["POST"])
 def create_todo():
-    """The route handler for handling post request from users submitting the
-    form to create a new todo item
+    """The route handler for creating a new todo item.
 
     Returns:
         Redirect back to the list's page
     """
-
     error = False
 
     try:
@@ -109,8 +107,7 @@ def create_todo():
 
 @app.route("/todos/<todo_id>/edit", methods=["POST"])
 def set_completed_todo(todo_id):
-    """The route handler for handling post request from users checking or
-    unchecking a todo item
+    """The route handler setting a todo item to completed.
 
     Args:
         todo_id: A str representing the id of the todo item that was completed
@@ -118,7 +115,6 @@ def set_completed_todo(todo_id):
     Returns:
         Response: A json object signalling the update request was successful
     """
-
     error = False
 
     try:
@@ -142,8 +138,7 @@ def set_completed_todo(todo_id):
 
 @app.route("/todos/<todo_id>", methods=["DELETE"])
 def delete_todo(todo_id):
-    """The route handler for handling a delete request from users clicking
-    the x butten next to the todo item
+    """The route handler for deleting a todo item.
 
     Args:
         todo_id: A str representing the id of the todo item to be deleted
@@ -151,7 +146,6 @@ def delete_todo(todo_id):
     Returns:
         Response: A json object signalling the deletion request was successful
     """
-
     error = False
 
     try:
@@ -174,12 +168,11 @@ def delete_todo(todo_id):
 
 @app.route("/lists/create", methods=["POST"])
 def create_list():
-    """The route handler responsible to creating a list
+    """The route handler responsible to creating a list.
 
     Returns:
         A redirect to the newly created list's page
     """
-
     error = False
 
     try:
@@ -203,8 +196,7 @@ def create_list():
 
 @app.route("/lists/<list_id>/edit", methods=["POST"])
 def set_completed_list(list_id):
-    """The route handler for handling post request from users clicking complete
-    all todos on a list
+    """The route handler for marking all todo items in a list as competed.
 
     Args:
         list_id: A str representing the id of the todo list item where all
@@ -213,7 +205,6 @@ def set_completed_list(list_id):
     Returns:
         Response: A json object signalling the update request was successful
     """
-
     error = False
 
     try:
@@ -237,8 +228,7 @@ def set_completed_list(list_id):
 
 @app.route("/lists/<list_id>", methods=["DELETE"])
 def delete_list(list_id):
-    """The route handler for handling a delete request from users clicking
-    the x butten next to the todo list
+    """The route handler for deleting a list.
 
     Args:
         todo_id: A str representing the id of the todo list to be deleted
@@ -246,7 +236,6 @@ def delete_list(list_id):
     Returns:
         Response: A json object signalling the deletion request was successful
     """
-
     error = False
 
     try:
@@ -269,7 +258,7 @@ def delete_list(list_id):
 
 @app.route("/lists/<list_id>")
 def get_list(list_id):
-    """The route handler for a list's page
+    """The route handler for a list's page.
 
     Args:
         list_id: A str representing the id of the list to navigate to
@@ -288,7 +277,7 @@ def get_list(list_id):
 
 @app.route("/")
 def index():
-    """The route handler for the homepage
+    """The route handler for the homepage.
 
     Returns:
         A redirect to the first list in the db
