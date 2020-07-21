@@ -1,4 +1,21 @@
-"""A todo app built in flask with a postgresql db"""
+"""A todo app built in flask with a postgresql db.
+
+Usage: flask run
+
+Attributes:
+    DIALECT: A str representing the dialect of the db
+    HOST: A str representing the host of the db
+    PORT: An int representing the port the db is running on
+    DATABASE: A str representing the db in which to connect to
+    app: A flask Flask object creating the flask app
+    SQLALCHEMY_DATABASE_URI: A str representing the location of the db
+    db: A SQLAlchemy service
+    migrate: A flask_migrate Migrate object bound to app and db
+
+Classes:
+    Todo()
+    TodoList()
+"""
 
 import sys
 from flask import (
