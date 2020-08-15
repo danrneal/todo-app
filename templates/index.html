@@ -3,178 +3,58 @@
 <html lang="en">
 
 <head>
-    <title>Todo App</title>
-    <style>
-        .hidden {
-            display: none;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0 10px;
-            width: 223px;
-        }
-
-        li {
-            clear: both;
-        }
-
-        :checked+span {
-            text-decoration: line-through;
-        }
-
-        li button {
-            background: none;
-            border: none;
-            outline: none;
-            color: red;
-            float: right;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .lists-wrapper,
-        .todos-wrapper {
-            display: inline-block;
-            vertical-align: top;
-        }
-    </style>
+  <title>Todo App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
+  <div class="lists-wrapper">
+    <h4>Todo Lists</h4>
 
-    <div class="lists-wrapper">
+    <form id="list-form" action="/lists/create" method="POST">
+      <input type="text" id="name" name="name">
+      <input type="submit" value="Create">
+    </form>
 
-        <h4>Todo Lists</h4>
+    <div id="list-error" class="hidden">Something went wrong!</div>
 
-        <form id="list-form" action="/lists/create" method="POST">
-            <input type="text" id='name' name="name">
-            <input type="submit" value="Create">
-        </form>
+    <ul id="lists">
+      {% for list in lists %}
+      <li data-list-id="{{ list.id }}">
+        <a href="/lists/{{ list.id }}">{{ list.name }}</a>
+        <button class="list-del" data-list-id="{{ list.id }}">&Cross;</button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
 
-        <div id="list-error" class="hidden">Something went wrong!</div>
+  <div class="todos-wrapper">
+    <h4>{{ active_list.name }}</h4>
 
-        <ul id="lists">
-            {% for list in lists %}
-            <li data-list-id="{{ list.id }}">
-                <a href="/lists/{{ list.id }}">{{ list.name }}</a>
-                <button class="list-del" data-list-id="{{ list.id }}">&Cross;</button>
-            </li>
-            {% endfor %}
-        </ul>
+    <form id="todo-form" action="/todos/create" method="POST">
+      <input type="text" id="description" name="description">
+      <input type="hidden" value="{{ active_list.id }}" name="list_id">
+      <input type="submit" value="Create">
+    </form>
 
+    <div id="todo-error" class="hidden">Something went wrong!</div>
+
+    <ul id="todos">
+      {% for todo in todos %}
+      <li data-todo-id="{{ todo.id }}">
+        <input class="completed" data-todo-id="{{ todo.id }}" type="checkbox" {% if todo.completed%}checked{% endif %}>
+        <span>{{ todo.description }}</span>
+        <button class="todo-del" data-todo-id="{{ todo.id }}">&Cross;</button>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <div>
+      <button id="complete-all" data-list-id="{{ active_list.id }}">Complete All</button>
     </div>
+  </div>
 
-    <div class="todos-wrapper">
-
-        <h4>{{ active_list.name }}</h4>
-
-        <form id="todo-form" action="/todos/create" method="POST">
-            <input type="text" id='description' name="description">
-            <input type="hidden" value="{{ active_list.id }}" name="list_id" />
-            <input type="submit" value="Create">
-        </form>
-
-        <div id="todo-error" class="hidden">Something went wrong!</div>
-
-        <ul id="todos">
-            {% for todo in todos %}
-            <li data-todo-id="{{ todo.id }}">
-                <input class="completed" data-todo-id="{{ todo.id }}" type="checkbox"
-                    {% if todo.completed %}checked{% endif %}>
-                <span>{{ todo.description }}</span>
-                <button class="todo-del" data-todo-id="{{ todo.id }}">&Cross;</button>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <div>
-            <button id="complete-all" data-list-id="{{ active_list.id }}">Complete All</button>
-        </div>
-
-    </div>
-
-    <script>
-
-        const todoDels = document.querySelectorAll('.todo-del');
-        for (let i = 0; i < todoDels.length; i++) {
-            const todoDel = todoDels[i];
-            todoDel.onclick = function (event) {
-                const todoId = event.target.dataset.todoId;
-                fetch('/todos/' + todoId, {
-                    method: 'DELETE'
-                }).then(function () {
-                    const liItem = document.querySelector('li[data-todo-id="' + todoId + '"]');
-                    liItem.remove();
-                    document.getElementById('todo-error').className = 'hidden';
-                }).catch(function () {
-                    document.getElementById('todo-error').className = '';
-                })
-            }
-        }
-
-        const checkboxes = document.querySelectorAll('.completed');
-        for (let i = 0; i < checkboxes.length; i++) {
-            const checkbox = checkboxes[i];
-            checkbox.onchange = function (event) {
-                const completed = event.target.checked;
-                const todoId = event.target.dataset.todoId;
-                fetch('/todos/' + todoId + '/edit', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        'completed': completed
-                    }),
-                    headers: {
-                        'Content-type': 'application/json'
-                    }
-                }).then(function () {
-                    document.getElementById('todo-error').className = 'hidden';
-                }).catch(function () {
-                    document.getElementById('todo-error').className = '';
-                })
-            }
-        }
-
-        const completeAll = document.querySelector('#complete-all');
-        completeAll.onclick = function (event) {
-            const listId = event.target.dataset.listId;
-            fetch('/lists/' + listId + '/edit', {
-                method: 'POST'
-            }).then(function () {
-                const checkboxes = document.querySelectorAll('.completed');
-                for (let i = 0; i < checkboxes.length; i++) {
-                    const checkbox = checkboxes[i];
-                    checkbox.checked = true;
-                }
-                document.getElementById('todo-error').className = 'hidden';
-            }).catch(function () {
-                document.getElementById('todo-error').className = '';
-            })
-        }
-
-        const listDels = document.querySelectorAll('.list-del');
-        for (let i = 0; i < listDels.length; i++) {
-            const listDel = listDels[i];
-            listDel.onclick = function (event) {
-                const listId = event.target.dataset.listId;
-                fetch('/lists/' + listId, {
-                    method: 'DELETE'
-                }).then(function () {
-                    if (listId === "{{ active_list.id }}") {
-                        window.location.replace("/");
-                    } else {
-                        const liItem = document.querySelector('li[data-list-id="' + listId + '"]');
-                        liItem.remove();
-                    }
-                    document.getElementById('list-error').className = 'hidden';
-                }).catch(function () {
-                    document.getElementById('list-error').className = '';
-                })
-            }
-        }
-
-    </script>
-
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>

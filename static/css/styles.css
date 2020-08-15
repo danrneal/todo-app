@@ -1,0 +1,33 @@
+.hidden {
+  display: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0 10px;
+  width: 223px;
+}
+
+li {
+  clear: both;
+}
+
+:checked + span {
+  text-decoration: line-through;
+}
+
+li button {
+  background: none;
+  border: none;
+  outline: none;
+  color: red;
+  float: right;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.lists-wrapper,
+.todos-wrapper {
+  display: inline-block;
+  vertical-align: top;
+}
